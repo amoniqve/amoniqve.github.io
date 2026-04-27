@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexandra Arizmendi — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Caveat:wght@400;500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #2c2b29;
+    --ink: #EDE8E0;
+    --muted: #a8a49e;
+    --accent: #9dcc8a;
+    --accent-dim: #1c2e19;
+    --blush: #f2c4ce;
+    --blush-dim: #2e1a22;
+    --border: rgba(237,232,224,0.12);
+    --border-soft: rgba(237,232,224,0.22);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 48px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  nav.scrolled { border-color: var(--border); background: rgba(44,43,41,0.92); backdrop-filter: blur(12px); }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 400;
+    letter-spacing: 0.05em;
+    text-decoration: none; color: var(--ink);
+  }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(157,204,138,0.08) 0%, transparent 70%);
+    z-index: 0;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-eyebrow {
+    font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(237,232,224,0.75); margin-bottom: 20px;
+  }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(64px, 10vw, 120px);
+    font-weight: 300; line-height: 0.9;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+  .hero-name em { font-style: italic; color: var(--accent); }
+  .hero-scroll-arrow {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center;
+    text-decoration: none; color: var(--muted);
+    transition: color 0.3s;
+    z-index: 2;
+  }
+  .hero-scroll-arrow:hover { color: var(--accent); }
+  .scroll-arrow-head {
+    font-size: 20px;
+    animation: arrowBounce 2s ease-in-out infinite;
+  }
+  @keyframes arrowBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden; padding: 16px 0;
+  }
+  .marquee-track {
+    display: flex; gap: 0;
+    animation: marquee 30s linear infinite;
+    white-space: nowrap; width: max-content;
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-item {
+    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); padding: 0 40px;
+  }
+  .marquee-dot { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); margin-left: 40px; vertical-align: middle; }
+
+  /* ABOUT TEASER */
+  .about-teaser {
+    border-bottom: 1px solid var(--border);
+  }
+  .about-teaser-inner {
+    padding: 40px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+  }
+  .about-teaser-text {
+    font-size: 15px; color: var(--muted); letter-spacing: 0.02em;
+  }
+  .about-teaser-link {
+    font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 3px; white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .about-teaser-link:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* CATEGORIES */
+  .categories-section { padding: 48px 48px 120px; }
+  .categories-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 300; margin-bottom: 40px;
+    letter-spacing: -0.01em;
+  }
+  .categories-heading em { font-style: italic; color: var(--accent); }
+  .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+  .cat-card {
+    display: block; text-decoration: none; color: var(--ink);
+    padding: 48px 40px;
+    border: 1px solid var(--border);
+    position: relative; overflow: hidden;
+    transition: border-color 0.4s;
+  }
+  .cat-card::before {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+    height: 0;
+    transition: height 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 0;
+  }
+  .cat-card.sage::before { background: #b8d9a8; }
+  .cat-card.blush::before { background: #f5cdd4; }
+  .cat-card:hover { border-color: rgba(237,232,224,0.25); }
+  .cat-card:hover::before { height: 100%; }
+  .cat-card:hover .cat-arrow { transform: translate(6px, -6px); }
+  .cat-card:hover .cat-num { color: rgba(20,30,18,0.6); }
+  .cat-card:hover .cat-desc { color: rgba(20,30,18,0.7); }
+  .cat-card:hover .cat-title { color: #1e3018; }
+  .cat-card:hover .cat-title em { color: #1e3018; }
+  .cat-card:hover .cat-arrow { color: rgba(30,48,24,0.55); }
+  .cat-card.blush:hover .cat-title { color: #3a1828; }
+  .cat-card.blush:hover .cat-title em { color: #3a1828; }
+  .cat-card.blush:hover .cat-num { color: rgba(58,24,40,0.55); }
+  .cat-card.blush:hover .cat-desc { color: rgba(58,24,40,0.65); }
+  .cat-card.blush:hover .cat-arrow { color: rgba(58,24,40,0.55); }
+  .cat-num { font-size: 14px; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 24px; position: relative; z-index: 1; transition: color 0.35s; }
+  .cat-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px; font-weight: 400;
+    line-height: 1.1; margin-bottom: 16px;
+    position: relative; z-index: 1;
+    transition: color 0.35s;
+  }
+  .cat-title em { font-style: italic; color: var(--accent); }
+  .cat-card.blush .cat-title em { color: var(--blush); }
+  .cat-desc { font-size: 16px; line-height: 1.6; color: var(--muted); position: relative; z-index: 1; margin-bottom: 40px; transition: color 0.35s; }
+  .cat-arrow {
+    position: absolute; bottom: 40px; right: 40px;
+    font-size: 20px; color: var(--muted);
+    transition: transform 0.3s, color 0.35s;
+    z-index: 1;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    border-top: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .contact-top {
+    padding: 100px 48px 80px;
+    position: relative;
+  }
+  .contact-label {
+    font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 32px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .contact-label::before { content:''; display:block; width:40px; height:1px; background:var(--muted); }
+  .contact-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(56px, 9vw, 110px);
+    font-weight: 300; line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin-bottom: 56px;
+  }
+  .contact-heading em { font-style: italic; color: var(--accent); }
+    .contact-email-wrap {
+    margin-top: 48px; margin-bottom: 8px;
+    display: inline-block; position: relative;
+  }
+  .contact-email-block {
+    display: inline-flex; align-items: center; gap: 14px;
+    text-decoration: none;
+    position: relative;
+  }
+  .contact-email-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 300;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+    position: relative;
+    background: linear-gradient(90deg, #9dcc8a, #c2e8b0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: letter-spacing 0.4s;
+  }
+  .contact-email-block:hover .contact-email-text { letter-spacing: 0.04em; }
+  .contact-email-underline {
+    position: absolute; bottom: -6px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #9dcc8a 0%, transparent 100%);
+    transform: scaleX(0.4); transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .contact-email-block:hover .contact-email-underline { transform: scaleX(1); }
+  .contact-email-arrow {
+    font-size: 20px; color: var(--accent);
+    opacity: 0.5;
+    transition: transform 0.35s, opacity 0.3s;
+    margin-top: -4px;
+  }
+  .contact-email-block:hover .contact-email-arrow { transform: translate(5px,-5px); opacity: 1; }
+
+  .contact-socials {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .contact-social {
+    text-decoration: none; color: var(--muted);
+    font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 12px 24px; border-radius: 100px;
+    transition: color 0.25s, border-color 0.25s, background 0.25s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .contact-social:hover { color: var(--ink); border-color: var(--border-soft); background: rgba(237,232,224,0.04); }
+  .contact-social-dot { width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:0;transition:opacity 0.25s; }
+  .contact-social:hover .contact-social-dot { opacity:1; }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 48px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  footer span { font-size: 13px; color: var(--muted); letter-spacing: 0.06em; }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .hero { padding: 0 24px 60px; }
+    .about-section { grid-template-columns: 1fr; padding: 80px 24px; gap: 48px; }
+    .categories-section { padding: 60px 24px; }
+    .cat-grid { grid-template-columns: 1fr; }
+    .about-teaser-inner { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+    .contact-top { padding: 80px 24px 60px; }
+    footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+  }
+
+  .cursor-dot {
+    width: 6px; height: 6px;
+    background: var(--ink);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.08s, background 0.2s;
+  }
+  .cursor-ring {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(237,232,224,0.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: width 0.3s, height 0.3s, border-color 0.3s, transform 0.12s;
+  }
+  .cursor-ring.hover {
+    width: 52px; height: 52px;
+    border-color: var(--accent);
+  }
+  .cursor-dot.hover {
+    transform: translate(-50%,-50%) scale(0);
+  }
+</style>
+</head>
+<body>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Alexandra Arizmendi</a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="mailto:aarizmendi01@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Portfolio 2026</p>
+    <h1 class="hero-name">Alexandra<br><em>Arizmendi.</em></h1>
+  </div>
+  <a href="#work" class="hero-scroll-arrow">
+    <span class="scroll-arrow-head">↓</span>
+  </a>
+</section>
+
+</div>
+
+
+
+<section class="categories-section" id="work">
+  <h2 class="categories-heading reveal">My <em>Work.</em></h2>
+  <div class="cat-grid">
+    <a href="3d-modeling.html" class="cat-card sage reveal">
+      <div>
+        <h3 class="cat-title">3D <em>Modeling</em></h3>
+        <p class="cat-desc">Maya, ZBrush, Substance Painter, UE5 and more.</p>
+      </div>
+      <span class="cat-arrow">↗</span>
+    </a>
+    <a href="traditional-art.html" class="cat-card sage reveal">
+      <div>
+        <h3 class="cat-title">Traditional <em>Art</em></h3>
+        <p class="cat-desc">Ink, watercolor, and pencil. Where it all started for me.</p>
+      </div>
+      <span class="cat-arrow">↗</span>
+    </a>
+    <a href="concept-art.html" class="cat-card blush reveal">
+      <div>
+        <h3 class="cat-title">Concept <em>Art</em></h3>
+        <p class="cat-desc">Designing characters, environments, and things that only exist in my head — for now.</p>
+      </div>
+      <span class="cat-arrow">↗</span>
+    </a>
+    <a href="games-websites.html" class="cat-card blush reveal">
+      <div>
+        <h3 class="cat-title">Pro<em>gramming</em></h3>
+        <p class="cat-desc">C++, Python, JS, C#, HTML and more.</p>
+      </div>
+      <span class="cat-arrow">↗</span>
+    </a>
+  </div>
+</section>
+
+<section class="contact-section">
+  <div class="contact-top">
+    <p class="contact-label reveal">Let's work together</p>
+    <h2 class="contact-heading reveal">Let's make<br>something <em>together.</em></h2>
+    <div class="contact-email-wrap reveal">
+      <a href="mailto:aarizmendi01@gmail.com" class="contact-email-block">
+        <span class="contact-email-text">aarizmendi01@gmail.com</span>
+        <span class="contact-email-arrow">↗</span>
+      </a>
+      <div class="contact-email-underline"></div>
+    </div>
+    <div class="contact-socials reveal">
+      <a href="#" class="contact-social"><span class="contact-social-dot"></span>Instagram</a>
+      <a href="https://www.linkedin.com/in/alexandra-arizmendi-665610180" target="_blank" class="contact-social"><span class="contact-social-dot"></span>LinkedIn</a>
+      <a href="#" class="contact-social"><span class="contact-social-dot"></span>Behance</a>
+      <a href="https://github.com/amoniqve" target="_blank" class="contact-social"><span class="contact-social-dot"></span>GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Alexandra Arizmendi</span>
+  <span style="font-family:'Caveat',cursive; font-size:15px; color:var(--accent);">made by me ✦</span>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      } else {
+        e.target.classList.remove('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Floating lag cursor
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button, .masonry-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.classList.add('hover'); dot.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { ring.classList.remove('hover'); dot.classList.remove('hover'); });
+  });
+
+</script>
+</body>
+</html>

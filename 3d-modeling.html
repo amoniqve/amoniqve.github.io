@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexandra Arizmendi — 3D Modeling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Caveat:wght@400;500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#2c2b29;--ink:#EDE8E0;--muted:#a8a49e;--accent:#9dcc8a;--accent-dim:#1E2A1A;--blush:#f2c4ce;--border:rgba(237,232,224,0.1);--border-soft:rgba(237,232,224,0.2);}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;cursor:none;overflow-x:hidden;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:28px 48px;border-bottom:1px solid transparent;transition:border-color 0.3s,background 0.3s;}
+  nav.scrolled{border-color:var(--border);background:rgba(44,43,41,0.92);backdrop-filter:blur(12px);}
+  .nav-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;letter-spacing:0.05em;text-decoration:none;color:var(--ink);}
+  .nav-back{font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color 0.2s;}
+  .nav-back:hover{color:var(--ink);}
+
+  .page-hero{padding:160px 48px 80px;border-bottom:1px solid var(--border);}
+  .page-eyebrow{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;}
+  .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(64px,10vw,120px);font-weight:300;line-height:0.9;letter-spacing:-0.02em;}
+  .page-title em{font-style:italic;color:var(--accent);}
+  .page-subtitle{font-size:15px;line-height:1.7;color:rgba(237,232,224,0.75);max-width:480px;margin-top:32px;}
+
+  .works-section{padding:80px 48px;}
+  .work-item{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--border);padding:64px 0;}
+  .work-item:first-child{padding-top:0;}
+  .work-item.reverse{direction:rtl;}
+  .work-item.reverse>*{direction:ltr;}
+  .work-image-wrap{position:relative;overflow:hidden;aspect-ratio:4/3;background:#252422;cursor:none;}
+  .work-image-wrap::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0);transition:background 0.3s;pointer-events:none;}
+  .work-image-wrap:hover::after{background:rgba(0,0,0,0.25);}
+  .work-image-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+  .work-image-wrap.contain{aspect-ratio:unset;height:auto;}
+  .work-image-wrap.contain img{height:auto;object-fit:unset;}
+  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+  .lightbox.open{opacity:1;pointer-events:all;}
+  .lightbox-inner{max-width:88vw;max-height:90vh;position:relative;display:flex;align-items:center;justify-content:center;}
+  .lightbox-inner img{max-width:88vw;max-height:88vh;object-fit:contain;display:block;}
+  .lightbox-close{position:absolute;top:-40px;right:0;background:none;border:none;color:var(--ink);font-size:20px;cursor:none;letter-spacing:0.1em;}
+  .lightbox-close:hover{color:var(--accent);}
+  .work-info{padding:0 48px;display:flex;flex-direction:column;justify-content:center;}
+  .work-num{font-size:11px;letter-spacing:0.12em;color:var(--muted);margin-bottom:20px;}
+  .work-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3vw,40px);font-weight:300;line-height:1.1;margin-bottom:16px;}
+  .work-title em{font-style:italic;color:var(--accent);}
+  .work-desc{font-size:14px;line-height:1.7;color:rgba(237,232,224,0.75);margin-bottom:32px;}
+  .work-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;}
+  .work-tag{font-size:12px;letter-spacing:0.06em;text-transform:uppercase;border:1px solid var(--border-soft);padding:6px 12px;border-radius:100px;color:var(--muted);transition:color 0.25s,border-color 0.25s;}
+  .work-tag:hover{color:var(--accent);border-color:var(--accent);}
+
+  .process-toggle{display:inline-flex;align-items:center;gap:10px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border-soft);background:none;cursor:none;padding:14px 24px;transition:color 0.3s,background 0.3s,border-color 0.3s;}
+  .process-toggle:hover{color:#1e3018;background:var(--accent);border-color:var(--accent);}
+  .process-panel{max-height:0;overflow:hidden;transition:max-height 0.7s ease;}
+  .process-panel.open{max-height:800px;}
+  .process-content{padding-top:28px;display:grid;gap:16px;}
+  .process-content.cols-1{grid-template-columns:1fr;}
+  .process-content.cols-2{grid-template-columns:repeat(2,1fr);}
+  .process-content.cols-3{grid-template-columns:repeat(3,1fr);}
+  .process-content.cols-4{grid-template-columns:repeat(4,1fr);}
+  .process-step{display:flex;flex-direction:column;gap:12px;}
+  .process-img{width:100%;aspect-ratio:16/9;background:#252422;border:1px solid var(--border);overflow:hidden;}
+  .process-img img{width:100%;height:100%;object-fit:cover;display:block;}
+  .process-caption{font-size:13px;color:rgba(237,232,224,0.75);line-height:1.5;padding:0 2px;}
+  .process-caption span{display:block;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+
+  footer{padding:32px 48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  footer span{font-size:13px;color:var(--muted);letter-spacing:0.06em;}
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  @media(max-width:768px){
+    nav,footer{padding:20px 24px;}
+    .page-hero,.works-section{padding-left:24px;padding-right:24px;}
+    .work-item{grid-template-columns:1fr;gap:32px;}
+    .work-item.reverse{direction:ltr;}
+    .work-info{padding:0;}
+    .process-content.cols-3,.process-content.cols-4{grid-template-columns:repeat(2,1fr);}
+  }
+
+  .cursor-dot{width:6px;height:6px;background:var(--ink);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.08s,background 0.2s;}
+  .cursor-ring{width:32px;height:32px;border:1px solid rgba(237,232,224,0.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,border-color 0.3s,transform 0.12s;}
+  .cursor-ring.hover{width:52px;height:52px;border-color:var(--accent);}
+  .cursor-dot.hover{transform:translate(-50%,-50%) scale(0);}
+</style>
+</head>
+<body>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Alexandra Arizmendi</a>
+  <a href="index.html" class="nav-back">← Back</a>
+</nav>
+
+<section class="page-hero">
+  <p class="page-eyebrow reveal">Category 01</p>
+  <h1 class="page-title reveal">3D <em>Modeling</em></h1>
+  <p class="page-subtitle reveal">Models created using Maya, ZBrush, Substance Painter, and Unreal Engine 5. From block-out to final render, ready for in game pipeline.</p>
+</section>
+
+<section class="works-section">
+
+  <!-- 01 — Device -->
+  <div class="work-item reveal">
+    <div class="work-image-wrap contain" onclick="openLightbox(this)">
+      <img src="images/Device.png" alt="Zelda-inspired device prop render">
+    </div>
+    <div class="work-info">
+      <p class="work-num">01</p>
+      <h2 class="work-title">Nintendo <em>Gameboy</em></h2>
+      <p class="work-desc">Custom Nintendo console modeled in Maya with Boolean techniques, textured and baked in Substance Painter into a high-poly for game production pipeline, and rendered in Unreal Engine 5. Includes unique design variations from the original.</p>
+      <div class="work-tags">
+        <span class="work-tag">Maya</span>
+        <span class="work-tag">Substance Painter</span>
+        <span class="work-tag">Unreal Engine 5</span>
+        <span class="work-tag">Hard Surface</span>
+      </div>
+      <button class="process-toggle" onclick="toggleProcess(this)">View process ↓</button>
+      <div class="process-panel">
+        <div class="process-content cols-2">
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/DeviceProcess1.png" alt="Device in Unreal Engine viewport"></div>
+            <div class="process-caption"><span>01 — Engine Import</span>Model imported into Unreal Engine with material slots assigned.</div>
+          </div>
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/DeviceProcess2.png" alt="Device render setup in Unreal"></div>
+            <div class="process-caption"><span>02 — Render Setup</span>Lighting rig and camera angles set up for the beauty shot.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 — Sword -->
+  <div class="work-item reverse reveal">
+    <div class="work-image-wrap contain" onclick="openLightbox(this)">
+      <img src="images/Sword.png" alt="Fantasy sword render in stone">
+    </div>
+    <div class="work-info">
+      <p class="work-num">02</p>
+      <h2 class="work-title">Dark <em>Sword</em></h2>
+      <p class="work-desc">Fully modeled in Maya (low-poly), textured and baked in Substance Painter, and rendered with Unreal Engine 5 lighting.</p>
+      <div class="work-tags">
+        <span class="work-tag">Maya</span>
+        <span class="work-tag">Substance Painter</span>
+        <span class="work-tag">Unreal Engine 5</span>
+        <span class="work-tag">Hard Surface</span>
+      </div>
+      <button class="process-toggle" onclick="toggleProcess(this)">View process ↓</button>
+      <div class="process-panel">
+        <div class="process-content cols-2">
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/SwordProcess1.jpg" alt="Sword mesh and wireframe in Blender"></div>
+            <div class="process-caption"><span>01 — Mesh & Wireframe</span>Clean topology with high and low poly versions.</div>
+          </div>
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/SwordProcess2.png" alt="Sword close-up render"></div>
+            <div class="process-caption"><span>02 — Final Render</span>Close-up beauty render showing material detail.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 — Chest -->
+  <div class="work-item reveal">
+    <div class="work-image-wrap" onclick="openLightbox(this)">
+      <img src="images/Chest.jpeg" alt="Stylized treasure chest render">
+    </div>
+    <div class="work-info">
+      <p class="work-num">03</p>
+      <h2 class="work-title">Treasure <em>Chest</em></h2>
+      <p class="work-desc">Modeled in Maya low-poly, baked into high-poly and textured in Substance Painter for game-ready pipelines. Details were done using ZBrush and rendered with vertex paint in Unreal Engine 5.</p>
+      <div class="work-tags">
+        <span class="work-tag">Maya</span>
+        <span class="work-tag">ZBrush</span>
+        <span class="work-tag">Substance Painter</span>
+        <span class="work-tag">Unreal Engine 5</span>
+      </div>
+      <button class="process-toggle" onclick="toggleProcess(this)">View process ↓</button>
+      <div class="process-panel">
+        <div class="process-content cols-2">
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/ChestProcess1.png" alt="Chest wireframe in Maya"></div>
+            <div class="process-caption"><span>01 — Modeling</span>Low and high poly meshes built in Maya.</div>
+          </div>
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/ChestProcess2.png" alt="Chest render setup in Unreal"></div>
+            <div class="process-caption"><span>02 — Engine Setup</span>Imported into Unreal with lighting rig.</div>
+          </div>
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/ChestProcess3.png" alt="Chest UV/texture map"></div>
+            <div class="process-caption"><span>03 — UV Map</span>Texture map layout showing UV unwrap.</div>
+          </div>
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/ChestProcess4.png" alt="Chest normal map"></div>
+            <div class="process-caption"><span>04 — Normal Map</span>Normal map baked for surface detail.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 — Dagger -->
+  <div class="work-item reverse reveal">
+    <div class="work-image-wrap" onclick="openLightbox(this)">
+      <img src="images/Dagger.png" alt="Stylized dagger render">
+    </div>
+    <div class="work-info">
+      <p class="work-num">04</p>
+      <h2 class="work-title">Stylized <em>Dagger</em></h2>
+      <p class="work-desc">A stylized fantasy dagger modeled in Maya, textured in Substance Painter, and rendered in Unreal Engine.</p>
+      <div class="work-tags">
+        <span class="work-tag">Maya</span>
+        <span class="work-tag">Substance Painter</span>
+        <span class="work-tag">Unreal Engine</span>
+        <span class="work-tag">Stylized</span>
+      </div>
+      <button class="process-toggle" onclick="toggleProcess(this)">View process ↓</button>
+      <div class="process-panel">
+        <div class="process-content cols-2">
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/DaggerProcess1.png" alt="Dagger modeling in Maya"></div>
+            <div class="process-caption"><span>01 — Modeling</span>High and low poly meshes built in Maya.</div>
+          </div>
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/DaggerProcess2.png" alt="Dagger in Unreal Engine"></div>
+            <div class="process-caption"><span>02 — Engine Import</span>Model brought into Unreal with materials.</div>
+          </div>
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/DaggerProcess3.png" alt="Dagger material graph"></div>
+            <div class="process-caption"><span>03 — Material Graph</span>Material graph setup in Unreal Engine.</div>
+          </div>
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/DaggerProcess4.png" alt="Dagger texturing in Substance Painter"></div>
+            <div class="process-caption"><span>04 — Texturing</span>Hand-painted textures applied in Substance Painter.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 — Mop -->
+  <div class="work-item reveal">
+    <div class="work-image-wrap" onclick="openLightbox(this)">
+      <img src="images/Mop.png" alt="Stylized mop prop render">
+    </div>
+    <div class="work-info">
+      <p class="work-num">05</p>
+      <h2 class="work-title">Stylized <em>Mop</em></h2>
+      <p class="work-desc">A stylized mop and bucket prop set with a playful color palette, modeled and rendered entirely in Unreal Engine.</p>
+      <div class="work-tags">
+        <span class="work-tag">Unreal Engine</span>
+        <span class="work-tag">Stylized</span>
+        <span class="work-tag">Props</span>
+        <span class="work-tag">Game-ready</span>
+      </div>
+      <button class="process-toggle" onclick="toggleProcess(this)">View process ↓</button>
+      <div class="process-panel">
+        <div class="process-content cols-1">
+          <div class="process-step">
+            <div class="process-img" onclick="openLightbox(this)" style="cursor:none;"><img src="images/MopProcess1.png" alt="Mop scene setup in Unreal Engine"></div>
+            <div class="process-caption"><span>01 — Scene Setup</span>Full scene layout in Unreal Engine with lighting and all prop assets placed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕ close</button>
+    <img id="lightbox-img" src="" alt="">
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 Alexandra Arizmendi</span>
+  <span style="font-family:'Caveat',cursive;font-size:15px;color:var(--accent);">made by me ✦</span>
+</footer>
+
+<script>
+  function toggleProcess(btn){
+    const panel = btn.nextElementSibling;
+    panel.classList.toggle('open');
+    btn.textContent = panel.classList.contains('open') ? 'Hide process ↑' : 'View process ↓';
+  }
+
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 60); });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, {threshold: 0.1});
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.classList.add('hover'); dot.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { ring.classList.remove('hover'); dot.classList.remove('hover'); });
+  });
+
+  function openLightbox(wrap) {
+    const img = wrap.querySelector('img');
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox-img').alt = img.alt;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>

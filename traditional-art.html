@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexandra Arizmendi — Traditional Art</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Caveat:wght@400;500&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#2c2b29;--ink:#EDE8E0;--muted:#a8a49e;--accent:#9dcc8a;--blush:#f2c4ce;--border:rgba(237,232,224,0.1);--border-soft:rgba(237,232,224,0.2);}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;cursor:none;overflow-x:hidden;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:28px 48px;border-bottom:1px solid transparent;transition:border-color 0.3s,background 0.3s;}
+  nav.scrolled{border-color:var(--border);background:rgba(44,43,41,0.92);backdrop-filter:blur(12px);}
+  .nav-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;letter-spacing:0.05em;text-decoration:none;color:var(--ink);}
+  .nav-back{font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color 0.2s;}
+  .nav-back:hover{color:var(--ink);}
+
+  .page-hero{padding:160px 48px 80px;border-bottom:1px solid var(--border);}
+  .page-eyebrow{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;}
+  .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(64px,10vw,120px);font-weight:300;line-height:0.9;letter-spacing:-0.02em;}
+  .page-title em{font-style:italic;color:var(--accent);}
+  .page-subtitle{font-size:15px;line-height:1.7;color:rgba(237,232,224,0.75);max-width:480px;margin-top:32px;}
+
+  .gallery-section{padding:64px 48px;}
+
+  /* Section label for studies */
+  .gallery-label{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;display:flex;align-items:center;gap:16px;}
+  .gallery-label::before{content:'';display:block;width:40px;height:1px;background:var(--muted);}
+
+  .masonry-grid{columns:3;column-gap:12px;margin-bottom:80px;}
+  .masonry-item{break-inside:avoid;margin-bottom:12px;cursor:none;position:relative;overflow:hidden;}
+  .masonry-item::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0);transition:background 0.3s;pointer-events:none;}
+  .masonry-item:hover::after{background:rgba(0,0,0,0.25);}
+  .masonry-item img{width:100%;display:block;object-fit:cover;}
+
+  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+  .lightbox.open{opacity:1;pointer-events:all;}
+  .lightbox-inner{max-width:88vw;max-height:90vh;position:relative;display:flex;align-items:center;justify-content:center;}
+  .lightbox-inner img{max-width:88vw;max-height:88vh;object-fit:contain;display:block;}
+  .lightbox-close{position:absolute;top:-40px;right:0;background:none;border:none;color:var(--ink);font-size:20px;cursor:none;letter-spacing:0.1em;}
+  .lightbox-close:hover{color:var(--accent);}
+  .lightbox-prev,.lightbox-next{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--ink);font-size:28px;cursor:none;padding:16px;transition:color 0.2s;z-index:10;}
+  .lightbox-prev{left:-56px;}
+  .lightbox-next{right:-56px;}
+  .lightbox-prev:hover,.lightbox-next:hover{color:var(--accent);}
+  .lightbox-counter{position:absolute;bottom:-32px;left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:0.1em;color:var(--muted);}
+
+  footer{padding:32px 48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  footer span{font-size:13px;color:var(--muted);letter-spacing:0.06em;}
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  @media(max-width:768px){
+    nav,footer{padding:20px 24px;}
+    .page-hero,.gallery-section{padding-left:24px;padding-right:24px;}
+    .masonry-grid{columns:2;}
+    .lightbox-prev{left:-40px;}
+    .lightbox-next{right:-40px;}
+  }
+
+  .cursor-dot{width:6px;height:6px;background:var(--ink);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.08s,background 0.2s;}
+  .cursor-ring{width:32px;height:32px;border:1px solid rgba(237,232,224,0.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,border-color 0.3s,transform 0.12s;}
+  .cursor-ring.hover{width:52px;height:52px;border-color:var(--accent);}
+  .cursor-dot.hover{transform:translate(-50%,-50%) scale(0);}
+</style>
+</head>
+<body>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<nav id="nav">
+  <a href="index.html" class="nav-logo">Alexandra Arizmendi</a>
+  <a href="index.html" class="nav-back">← Back</a>
+</nav>
+
+<section class="page-hero">
+  <p class="page-eyebrow reveal">Category 02</p>
+  <h1 class="page-title reveal">Traditional <em>Art</em></h1>
+  <p class="page-subtitle reveal">A variety of my work using ink, oil, watercolor, charcoal, pen, acrylic, and gouache. Click any piece to see full size.</p>
+</section>
+
+<section class="gallery-section">
+
+  <!-- Main works -->
+  <p class="gallery-label reveal">Selected Works</p>
+  <div class="masonry-grid reveal">
+    <div class="masonry-item" onclick="openLightbox(0)">
+      <img src="images/Acrylic.jpeg" alt="Acrylic knight painting">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(1)">
+      <img src="images/Poseidon.jpeg" alt="Poseidon white charcoal">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(2)">
+      <img src="images/Stippling.jpeg" alt="Stippling portrait">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(3)">
+      <img src="images/WhiteCharcoal.jpeg" alt="White charcoal skull still life">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(4)">
+      <img src="images/FallenAngel.jpeg" alt="Fallen angel pencil sketch">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(5)">
+      <img src="images/Mermaid.jpeg" alt="Mermaid painting">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(6)">
+      <img src="images/Gouache.jpeg" alt="Gouache campfire painting">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(7)">
+      <img src="images/Ink.jpeg" alt="Ink portrait">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(8)">
+      <img src="images/watercolor.jpeg" alt="Watercolor painting">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(9)">
+      <img src="images/WhitePencil2.jpeg" alt="White pencil figure with gold rays">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(10)">
+      <img src="images/WhitePencil.jpeg" alt="White pencil Atlas">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(11)">
+      <img src="images/Pencil.jpeg" alt="Pencil skull studies">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(12)">
+      <img src="images/Eraser.jpeg" alt="Charcoal skull study">
+    </div>
+  </div>
+
+  <!-- Life Drawing Studies -->
+  <p class="gallery-label reveal">Life Drawing Studies</p>
+  <div class="masonry-grid reveal">
+    <div class="masonry-item" onclick="openLightbox(13)">
+      <img src="images/Study1.jpeg" alt="Life drawing study 1">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(14)">
+      <img src="images/Study2.jpeg" alt="Life drawing study 2">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(15)">
+      <img src="images/Study3.jpeg" alt="Life drawing study 3">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(16)">
+      <img src="images/Study4.jpeg" alt="Life drawing study 4">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(17)">
+      <img src="images/Study5.jpeg" alt="Life drawing study 5">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(18)">
+      <img src="images/Study6.jpeg" alt="Life drawing study 6">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(19)">
+      <img src="images/Study7.jpeg" alt="Life drawing study 7">
+    </div>
+    <div class="masonry-item" onclick="openLightbox(20)">
+      <img src="images/Study8.jpeg" alt="Life drawing study 8">
+    </div>
+  </div>
+
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕ close</button>
+    <button class="lightbox-prev" onclick="changeImage(-1)">←</button>
+    <img id="lightbox-img" src="" alt="">
+    <button class="lightbox-next" onclick="changeImage(1)">→</button>
+    <span class="lightbox-counter" id="lightbox-counter"></span>
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 Alexandra Arizmendi</span>
+  <span style="font-family:'Caveat',cursive;font-size:15px;color:var(--accent);">made by me ✦</span>
+</footer>
+
+<script>
+  const images = [
+    {src:'images/Acrylic.jpeg',alt:'Acrylic knight painting'},
+    {src:'images/Poseidon.jpeg',alt:'Poseidon white charcoal'},
+    {src:'images/Stippling.jpeg',alt:'Stippling portrait'},
+    {src:'images/WhiteCharcoal.jpeg',alt:'White charcoal skull still life'},
+    {src:'images/FallenAngel.jpeg',alt:'Fallen angel pencil sketch'},
+    {src:'images/Mermaid.jpeg',alt:'Mermaid painting'},
+    {src:'images/Gouache.jpeg',alt:'Gouache campfire painting'},
+    {src:'images/Ink.jpeg',alt:'Ink portrait'},
+    {src:'images/watercolor.jpeg',alt:'Watercolor painting'},
+    {src:'images/WhitePencil2.jpeg',alt:'White pencil figure with gold rays'},
+    {src:'images/WhitePencil.jpeg',alt:'White pencil Atlas'},
+    {src:'images/Pencil.jpeg',alt:'Pencil skull studies'},
+    {src:'images/Eraser.jpeg',alt:'Charcoal skull study'},
+    {src:'images/Study1.jpeg',alt:'Life drawing study 1'},
+    {src:'images/Study2.jpeg',alt:'Life drawing study 2'},
+    {src:'images/Study3.jpeg',alt:'Life drawing study 3'},
+    {src:'images/Study4.jpeg',alt:'Life drawing study 4'},
+    {src:'images/Study5.jpeg',alt:'Life drawing study 5'},
+    {src:'images/Study6.jpeg',alt:'Life drawing study 6'},
+    {src:'images/Study7.jpeg',alt:'Life drawing study 7'},
+    {src:'images/Study8.jpeg',alt:'Life drawing study 8'},
+  ];
+
+  let current = 0;
+
+  function openLightbox(i) {
+    current = i;
+    updateLightbox();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function changeImage(dir) {
+    current = (current + dir + images.length) % images.length;
+    updateLightbox();
+  }
+  function updateLightbox() {
+    document.getElementById('lightbox-img').src = images[current].src;
+    document.getElementById('lightbox-img').alt = images[current].alt;
+    document.getElementById('lightbox-counter').textContent = (current + 1) + ' / ' + images.length;
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') changeImage(-1);
+    if (e.key === 'ArrowRight') changeImage(1);
+  });
+
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 60); });
+  const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); }, {threshold: 0.05});
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button, .masonry-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.classList.add('hover'); dot.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { ring.classList.remove('hover'); dot.classList.remove('hover'); });
+  });
+</script>
+</body>
+</html>
