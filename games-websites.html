@@ -52,6 +52,10 @@
   .live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#6dbe6d;margin-right:6px;animation:pulse 2s infinite;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
 
+  .trailer-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#1a1a18;margin-bottom:16px;}
+  .trailer-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+  .trailer-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+
   .shots-toggle{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border-soft);background:none;cursor:none;padding:10px 18px;transition:color 0.3s,background 0.3s,border-color 0.3s;margin-top:4px;}
   .shots-toggle:hover{color:#1e3018;background:var(--accent);border-color:var(--accent);}
   .shots-panel{max-height:0;overflow:hidden;transition:max-height 0.6s ease;}
@@ -130,6 +134,10 @@
           </div>
           <div class="project-links">
             <span class="wip-badge"><span class="wip-dot"></span>In development</span>
+          </div>
+          <p class="trailer-label">Official Trailer</p>
+          <div class="trailer-wrap">
+            <iframe src="https://www.youtube.com/embed/VzG304YBX5A" title="Trials of Kairos Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
           <button class="shots-toggle" onclick="toggleShots(this)">Screenshots ↓</button>
           <div class="shots-panel">
